@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Belajar WebGis</title>
+    <!-- LEAFLET CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- LEAFLET JAVASCRIPT -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        // Inisialisasi peta dengan koordinat dan zoom level awal
+        var map = L.map('map').setView([-5.367016, 105.317890], 15);
+
+        // Basemap OpenStreetMap
+        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+        osm.addTo(map);
+
+        // Basemap Esri World Imagery
+        var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+        Esri_WorldImagery.addTo(map);
+
+        // Basemap Google Satellite
+        var googleSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+        });
+
+        // Tambahkan peta Google Satellite ke dalam opsi layer control
+        var baseMaps = {
+            "OSM": osm,
+            "ESRI": Esri_WorldImagery,
+            "Google Satellite": googleSat
+        };
+
+        // Layer lain seperti lokasi gedung
+        var overlayMaps = {
+            "GKU 1": L.marker([-5.360910 , 105.310579]).bindPopup("Gedung GKU 1"),
+            "Poligon GKU 1": L.polygon([
+                [-5.3607875633791995, 105.30988134092401],
+                [-5.360791646969116, 105.31104480808267],
+                [-5.3610774981954, 105.31104617525911],
+                [-5.3610829429793645, 105.3098977470414]
+            ]).bindPopup("Poligon GKU 1"),
+            "GKU 2": L.marker([-5.360161630723519, 105.31408175668783]).bindPopup("GKU 2"),
+            "Poligon GKU 2": L.polygon([
+                [-5.360638847665609, 105.31327768049401],
+                [-5.3606129154202895, 105.31427115545776],
+                [-5.360323956040809, 105.31453905881875],
+                [-5.359757150706974, 105.31440882801826],
+                [-5.359820129103381, 105.31366465201548],
+                [-5.360268386913689, 105.31328884313406]
+            ]).bindPopup("Poligon GKU 2"),
+            "LABTEK 1": L.marker([-5.360316 , 105.310327]).bindPopup("Gedung LABTEK 1"),
+            "Poligon LABTEK 1": L.polygon([
+                [-5.360155284713459, 105.30984581546983],
+                [-5.360166398541343, 105.31052673651239],
+                [-5.36047017642524, 105.31051557387235],
+                [-5.360473881032639, 105.30987558250993]
+            ]).bindPopup("Poligon LABTEK 1"),
+            "LABTEK 2": L.marker([-5.361514 , 105.310473]).bindPopup("Gedung LABTEK 2"),
+            "Poligon LABTEK 2": L.polygon([
+                [-5.361402437132172, 105.3098861770109],
+                [-5.361395027928608, 105.31100616189511],
+                [-5.361650645399779, 105.31099499925506],
+                [-5.3616765776010284, 105.3098824561309]
+            ]).bindPopup("Poligon LABTEK 2"),
+            "LABTEK 3": L.marker([-5.360326345938591, 105.30922149232568]).bindPopup("Gedung LABTEK 3"),
+            "Poligon LABTEK 3": L.polygon([
+                [-5.360151081618067, 105.30868391783878],
+                [-5.360151081618067, 105.3094876279218],
+                [-5.360454859509584, 105.3094876279218],
+                [-5.360458564117085, 105.30863554639859]
+            ]).bindPopup("Poligon LABTEK 3"),
+            "LABTEK 4": L.marker([-5.361303569415185, 105.3169965455689]).bindPopup("Gedung LABTEK 4"),
+            "Poligon LABTEK 4": L.polygon([
+                [-5.361231035710816, 105.31688319782326],
+                [-5.361237147272471, 105.3182827563391],
+                [-5.362214996348738, 105.31835027889908],
+                [-5.362190550140918, 105.31688319782326]
+            ]).bindPopup("Poligon LABTEK 4"),
+            "LABTEK 5": L.marker([-5.362025331841597, 105.3106008281633]).bindPopup("Gedung LABTEK 5"),
+            "Poligon LABTEK 5": L.polygon([
+                [-5.361909796421033, 105.30989708250024],
+                [-5.361901143611352, 105.31101530363456],
+                [-5.362221297487954, 105.31100661279675],
+                [-5.362229950293107, 105.30986811304082]
+            ]).bindPopup("Poligon LABTEK 5"),
+            "Gedung A": L.marker([-5.357863905536724, 105.31441445694506]).bindPopup("Gedung A"),
+            "Poligon Gedung A": L.polygon([
+                [-5.35770963862221, 105.31429436459885],
+                [-5.357718621047098, 105.31453344335218],
+                [-5.358086900354129, 105.3145289324323],
+                [-5.35807791793466, 105.31429436459885]
+            ]).bindPopup("Poligon Gedung A"),
+            "Gedung B": L.marker([-5.357882428652572, 105.3153000263884]).bindPopup("Gedung B"),
+            "Poligon Gedung B": L.polygon([
+                [-5.357693919377329, 105.31516722762696],
+                [-5.357693919377329, 105.31541532822001],
+                [-5.358107110796485, 105.31543111643957],
+                [-5.358086900353136, 105.31517850492664]
+            ]).bindPopup("Poligon Gedung B"),
+            "Gedung C": L.marker([-5.358349005873539, 105.31364630282914]).bindPopup("Gedung C"),
+            "Poligon Gedung C": L.polygon([
+                [-5.35827322853919, 105.31330458894149],
+                [-5.358259754914026, 105.31415715279766],
+                [-5.358513508137994, 105.31395641686326],
+                [-5.358506771328102, 105.31324820244306]
+            ]).bindPopup("Poligon Gedung C"),
+            "Gedung D": L.marker([-5.358737990882896, 105.31351607203273]).bindPopup("Gedung D"),
+            "Poligon Gedung D": L.polygon([
+                [-5.358520329373877, 105.31340742915943],
+                [-5.358513592564062, 105.31361944239349],
+                [-5.358922292225251, 105.31361493147364],
+                [-5.35908846673456, 105.3134119400793]
+            ]).bindPopup("Poligon Gedung D"),
+            "Gedung E": L.marker([-5.360053128850763, 105.3155216264255]).bindPopup("Gedung E"),
+            "Poligon Gedung E": L.polygon([
+                [-5.359560336251436, 105.3153416949051],
+                [-5.359563220532411, 105.31590080547228],
+                [-5.359969904012177, 105.31591818714793],
+                [-5.359975672570233, 105.31564877117515],
+                [-5.3605352224419525, 105.3156313894995],
+                [-5.3605352224419525, 105.31531272544568]
+            ]).bindPopup("Poligon Gedung E"),
+            "Gedung F": L.marker([-5.361353445580143, 105.31379513803319]).bindPopup("Gedung F"),
+            "Poligon Gedung F": L.polygon([
+                [-5.36124941146696, 105.31323866694126],
+                [-5.361260948558824, 105.3141598957514],
+                [-5.361794538819464, 105.31415410185951],
+                [-5.361820497252683, 105.31376301415708],
+                [-5.361572449956828, 105.31373404469765],
+                [-5.361514764524742, 105.31322997610343]
+            ]).bindPopup("Poligon Gedung F"),
+            "Galeri 1 ITERA": L.marker([-5.357989754801538, 105.3155459603684]).bindPopup("Galeri 1 ITERA"),
+            "Galeri 2 ITERA": L.marker([-5.360712474032708, 105.30872794096173]).bindPopup("Galeri 2 ITERA"),
+            "Solar Power Generator": L.marker([-5.36051123910402, 105.3117738466592]).bindPopup("Solar Power Generator"),
+            "Poliklinik ITERA": L.marker([-5.357746734238417, 105.31595335738575]).bindPopup("Poliklinik ITERA"),
+            "Kantin BKL ITERA": L.marker([-5.357671555197166, 105.31645733558787]).bindPopup("Kantin BKL ITERA"),
+            "Kantin RK ITERA": L.marker([-5.359415198637714, 105.31259157078216]).bindPopup("Kantin RK ITERA"),
+            "Masjid At-Tanwir": L.marker([-5.356761550810726, 105.31879577540488]).bindPopup("Masjid At-Tanwir"),
+            "Masjid Baitul Ilmi": L.marker([-5.359187354741259, 105.31263423962402]).bindPopup("Masjid Baitul Ilmi"),
+            "Lapangan Basket": L.marker([-5.358626244058118, 105.3116121919078]).bindPopup("Lapangan Basket"),
+            "Lapangan Voli": L.marker([-5.358534042891182, 105.31188788066696]).bindPopup("Lapangan Voli"),
+            "Asrama TB1": L.marker([-5.358372596020297, 105.31742211561127]).bindPopup("Asrama TB1"),
+            "Asrama TB2": L.marker([-5.3584592214030655, 105.31936055738096]).bindPopup("Asrama TB2"),
+            "Asrama TB3": L.marker([-5.35909505612092, 105.31896240174606]).bindPopup("Asrama TB3"),
+            "Asrama TB4": L.marker([-5.3590786559986805, 105.31745657061951]).bindPopup("Asrama TB4"),
+            "Asrama TB5": L.marker([-5.358463146309079, 105.31846569270763]).bindPopup("Asrama TB5"),
+            "RIMA": L.marker([-5.358668385707555, 105.32107087236226]).bindPopup("RIMA"),
+            "Integrated Farming": L.marker([-5.361007835957766, 105.32132403069662]).bindPopup("Integrated Farming"),
+            "Lapangan Sepak Bola": L.marker([-5.362382597100303, 105.32002002284376]).bindPopup("Lapangan Sepak Bola"),
+            "Lapangan Tenis": L.marker([-5.362729100161696, 105.3194013094297]).bindPopup("Lapangan Tenis"),
+            "Gedung Olahraga": L.marker([-5.362490398071324, 105.31893340742562]).bindPopup("Gedung Olahraga"),
+            "EMBUNG A": L.marker([-5.35750712580273, 105.3134231581644]).bindPopup("EMBUNG A"),
+            "EMBUNG B": L.marker([-5.358759052691398, 105.30811937289782]).bindPopup("EMBUNG B"),
+            "EMBUNG C": L.marker([-5.359121024121132, 105.31383110279253]).bindPopup("EMBUNG C"),
+            "EMBUNG D": L.marker([-5.360258844604234, 105.32047602722488]).bindPopup("EMBUNG D"),
+            "EMBUNG E": L.marker([-5.365149949115303, 105.31637508876588]).bindPopup("EMBUNG E"),
+            "EMBUNG F": L.marker([-5.368604368443862, 105.31959388395272]).bindPopup("EMBUNG F"),
+            "EMBUNG G": L.marker([-5.370154315655493, 105.31030973963468]).bindPopup("EMBUNG G"),
+            "KEBUN RAYA ITERA": L.marker([-5.369661771082829, 105.31302303852966]).bindPopup("KEBUN RAYA ITERA"),
+            "UPT KEBUN RAYA ITERA": L.marker([-5.367676698048504, 105.31051388143821]).bindPopup("UPT KEBUN RAYA ITERA"),
+            "KANTOR UPT KEBUN RAYA": L.marker([-5.368007723922353, 105.31004436259138]).bindPopup("KANTOR UPT KEBUN RAYA"),
+            "GERBANG BARAT ITERA": L.marker([-5.363141330680947, 105.3084750222288]).bindPopup("GERBANG BARAT ITERA"),
+            "GERBANG UTARA ITERA": L.marker([-5.35759334132439, 105.3148580772494]).bindPopup("GERBANG UTARA ITERA"),
+        };
+
+        // Menambahkan kontrol untuk basemap dan overlay
+        L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+    </script>
+</body>
+</html>
